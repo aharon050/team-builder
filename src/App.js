@@ -6,8 +6,8 @@ import ConnectedSignUp from "./Components/SignUp";
 import ButtonAppBar from "./Components/header";
 import Home from "./Components/home";
 import Topics from "./Components/topics";
-import Projects from "./Components/projects";
-import Teams from "./Components/Teams";
+import Projects from "./Components/project/projects";
+import Teams from "./Components/team/Teams";
 import Profile from "./Components/profile";
 
 class App extends React.Component {

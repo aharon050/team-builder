@@ -1,4 +1,4 @@
-import { REGISTER } from "../../../redux/actionTypes";
+import { REGISTER } from "../../redux/actionTypes";
 
 let initialState = { status: 0 };
 

@@ -1,7 +1,7 @@
 import React from "react";
 import { connect } from "react-redux";
 import SimpleCard from "./projectItem";
-import ButtonAppBar from "./header";
+import ButtonAppBar from "../header";
 import Axios from "axios";
 
 class Projects extends React.Component {

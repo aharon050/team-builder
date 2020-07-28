@@ -6,9 +6,9 @@ import FormHelperText from "@material-ui/core/FormHelperText";
 import FormControl from "@material-ui/core/FormControl";
 import Select from "@material-ui/core/Select";
 import { withStyles } from "@material-ui/core";
-import Axios from "axios";
 import { v4 as uuid } from "uuid";
 import { connect } from "react-redux";
+import {handleLoadCompanies} from "../../store/actions/Companies";
 
 const useStyles = (theme) => ({
   formControl: {
@@ -22,16 +22,13 @@ const useStyles = (theme) => ({
 
 class SimpleSelect extends React.Component {
   state = {
-    company: [],
     id: "",
   };
 
   componentDidMount() {
-    Axios.get(
-      "https://picsart-bootcamp-2020-api.herokuapp.com/api/v1/companies"
-    ).then((res) => {
-      this.setState({ company: res.data });
-    });
+    if (!this.props.companies.length){
+      this.props.dispatch(handleLoadCompanies())
+    }
   }
   handleChange = (event) => {
     this.setState({ id: event.target.value });
@@ -49,7 +46,7 @@ class SimpleSelect extends React.Component {
             //value={this.state.id}
             onChange={(e) => this.props.onchange(e)}
           >
-            {this.state.company.map((item) => {
+            {this.props.companies.map((item) => {
               return (
                 <MenuItem value={item.id} key={uuid()}>
                   {item.name}
@@ -64,4 +61,6 @@ class SimpleSelect extends React.Component {
   }
 }
 
-export default connect()(withStyles(useStyles)(SimpleSelect));
+export default connect( (state) => ({
+  companies: state.companies.companies
+}) )(withStyles(useStyles)(SimpleSelect));

@@ -7,22 +7,19 @@ import ThumbUpOutlinedIcon from "@material-ui/icons/ThumbUpOutlined";
 import IconButton from "@material-ui/core/IconButton";
 import DeleteIcon from "@material-ui/icons/Delete";
 import {Input,Button} from "@material-ui/core";
+import {handleDeleteTopic, handleLoadTopics, handleVoteTopics} from "../store/actions/Topics";
+import {handleAddTopic} from "../store/actions/Topics";
 
 
 class Topics extends React.Component {
   state = {
-    topics: [],
-    newTopic: "",
+    newTopic: ""
   };
 
   componentDidMount() {
-    Axios.get("https://picsart-bootcamp-2020-api.herokuapp.com/api/v1/topics", {
-      headers: { token: window.localStorage.getItem("token") },
-    }).then((res) => {
-      this.setState({
-        topics: res.data,
-      });
-    });
+    if (!this.props.topics.length){
+      this.props.dispatch( handleLoadTopics() )
+    }
   }
 
   topicAddHandler = (e) => {
@@ -33,43 +30,19 @@ class Topics extends React.Component {
   };
 
   addTopicHandler = () => {
-    return Axios.post(
-        "https://picsart-bootcamp-2020-api.herokuapp.com/api/v1/topics",
-        { title: this.state.newTopic },
-        { headers: { token: window.localStorage.getItem("token") } }
-    ).then((res) => {
-      console.log(res);
+    this.props.dispatch(handleAddTopic({ title: this.state.newTopic }, () => {
       this.setState({
-        topics: [...this.state.topics, res.data],
-        newTopic: "",
-      });
-      console.log(this.state.topics);
-    });
+        newTopic: ''
+      })
+    }))
   };
 
   deleteTopic = (id) => {
-    return Axios.delete(
-        `https://picsart-bootcamp-2020-api.herokuapp.com/api/v1/topics/${id}`,
-        { headers: { token: window.localStorage.getItem("token") } }
-    ).then((res) => {
-      this.setState({
-        topics: this.state.topics.filter((item) => item.id !== id),
-      });
-    });
+    this.props.dispatch(handleDeleteTopic(id))
   };
 
   voteTopic = (Id, type) => {
-    return Axios.post(
-        `https://picsart-bootcamp-2020-api.herokuapp.com/api/v1/topics/${Id}/voting`,
-        type,
-        { headers: { token: window.localStorage.getItem("token") } }
-    ).then((res) => {
-      this.setState({
-        topics: this.state.topics.map((item) =>
-            item.id !== Id ? item : res.data
-        ),
-      });
-    });
+    this.props.dispatch( handleVoteTopics(Id, type) )
   };
 
   render() {
@@ -79,8 +52,7 @@ class Topics extends React.Component {
           <Input onChange={this.topicAddHandler} value={this.state.newTopic} style={{width:'350px'}}/>
           <Button onClick={this.addTopicHandler}>add</Button>
           <ul>
-            {this.state.topics.map((item, index) => {
-              return (
+            {this.props.topics.map((item, index) => {return (
                   <p key={index} style={{border:'2px solid #ccc',paddingRight:"1px",width:"400px",marginLeft:'450px'}}>
                     {item.title}&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
                     {
@@ -121,4 +93,6 @@ class Topics extends React.Component {
   }
 }
 
-export default Topics;
+export default connect((state) => ({
+  topics: state.topics.topics
+}))(Topics);

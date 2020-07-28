@@ -1,8 +1,10 @@
 import React from "react";
 import Axios from "axios";
-import ButtonAppBar from "./header";
+import ButtonAppBar from "../header";
 import ImgMediaCard from "./teamCard";
-import {data} from '../store/reducers/shared/singUpReducer'
+import {connect} from 'react-redux'
+import {data} from '../../store/reducers/singUpReducer'
+import {handleLoadTeams} from "../../store/actions/Teams";
 
 class Teams extends React.Component {
   state = {
@@ -10,17 +12,9 @@ class Teams extends React.Component {
   };
 
   componentDidMount() {
-    Axios.get(
-      "https://picsart-bootcamp-2020-api.herokuapp.com/api/v1/teams",
-      {
-        headers: { token: window.localStorage.getItem("token") },
-      }
-    ).then((res) => {
-        console.log(res.data)
-      this.setState({
-        team:res.data
-      })
-    });
+    if (!this.props.teams.length){
+      this.props.dispatch(handleLoadTeams())
+    }
   }
 
   render() {
@@ -29,7 +23,7 @@ class Teams extends React.Component {
       <div >
 
         <ButtonAppBar />
-        {this.state.team.map((item) =>{
+        {this.props.teams.map((item) =>{
           return (
               <div style={{border:'1px solid #ccc',margin:'20px 20px 20px 20px'}}>
               <div><h1> {item.project} </h1>
@@ -49,4 +43,6 @@ class Teams extends React.Component {
   }
 }
 
-export default Teams;
+export default connect( (state) => ({
+  teams: state.teams.teams
+}) )(Teams);

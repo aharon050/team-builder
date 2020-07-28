@@ -1,4 +1,4 @@
-import {REGISTER,SING_IN} from "../../../redux/actionTypes";
+import {REGISTER,SING_IN} from "../../redux/actionTypes";
 
 const singInReducer = (state={user:{}},action) =>{
     switch (action.type) {

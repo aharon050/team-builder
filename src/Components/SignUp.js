@@ -11,7 +11,6 @@ import Container from "@material-ui/core/Container";
 import { Link } from "react-router-dom";
 import SimpleSelect from "./selects/selectCompany";
 import { connect } from "react-redux";
-import { handleLoadCompanies } from "../store/actions/shared/companies.actions";
 import SelectSex from "./selects/selectSex";
 import {REGISTER_SUCCESS, singUpActions} from '../store/actions/register/register.actions'
 import {register} from '../redux/actionCreater'
